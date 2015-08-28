@@ -21,6 +21,7 @@ object IntroductionExample extends App {
     val eurDollarRate: Option[ExchangeRate] = euroExchangeRates.flatMap(_.get(dollar))
     eurDollarRate.map(_ * amount).foreach(inDollars => print(s"$amount EUR is $inDollars USD"))
   }
+  convertEuroToUsd(30.0)
 
   def convertEuroToUsd2(amount: Double): Unit = for {
     euroExchangeRates <- rates.get(euro)
@@ -45,6 +46,15 @@ object IntroductionExample extends App {
       }
     case None => ()
   }
+  patternMach(30.0)
+
+  def patternMach2(amount: Double): Unit = for {
+    euroExchangeRates <- rates.get(euro)
+    eurDollarRate <- euroExchangeRates.get(dollar)
+    inDollars = amount * eurDollarRate
+  } print(s"$amount EUR is $inDollars USD")
+
+  patternMach2(30.0)
 
   /**
    * T3.2

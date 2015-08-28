@@ -5,7 +5,7 @@ import scala.util.Try
 import scala.concurrent.ExecutionContext.Implicits.global
 import reflect.runtime.universe.{ reify => desugar }
 
-object Syntax {
+object Syntax extends App {
 
   /**
    * T7.0
@@ -27,15 +27,21 @@ object Syntax {
    */
   def whyIsItCompiling() = {
 
-    for {
-      a <- Future.successful(1)
-      b <- Try(2)
-      c <- Option(3)
-      d <- Right(4).right
-      e <- List(5)
-      sum = a + b + c + d + e
-    } println(sum)
+    println(desugar {
+
+      for {
+        a <- Future.successful(1)
+        b <- Try(2)
+        c <- Option(3)
+        d <- Right(4).right
+        e <- List(5)
+        sum = a + b + c + d + e
+      } println(sum)
+
+    }.tree)
 
   }
+
+  whyIsItCompiling()
 
 }

@@ -26,7 +26,7 @@ object IntroductionExample extends App {
     euroExchangeRates <- rates.get(euro)
     eurDollarRate <- euroExchangeRates.get(dollar)
     inDollars = eurDollarRate * amount
-  } yield print(s"$amount EUR is $inDollars USD")
+  } print(s"$amount EUR is $inDollars USD")
 
   convertEuroToUsd2(30.0)
 

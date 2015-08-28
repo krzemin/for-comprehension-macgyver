@@ -5,7 +5,7 @@ import pl.codepot.common.{ Commit, BranchName, GitClient }
 /**
  *
  */
-object ListExample {
+object ListExample extends App {
 
   val master = BranchName("master")
   val linus = "Linus"
@@ -17,9 +17,12 @@ object ListExample {
    * use GitClient.log(branchname)
    *     Commit.author.startWith
    */
-  def linusCommits: List[Commit] = ???
+  def linusCommits: List[Commit] =
+    GitClient
+      .log(master)
+      .filter(_.author.startsWith(linus))
 
-  //linusCommits.foreach(println)
+  linusCommits.foreach(println)
 }
 
 /**

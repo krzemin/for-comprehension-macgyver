@@ -2,7 +2,7 @@ package pl.codepot.exercises
 
 import pl.codepot.common._
 
-object OptionExample {
+object OptionExample extends App {
   val sha = SHA("12345")
   val branch = BranchName("master")
   /**
@@ -12,8 +12,12 @@ object OptionExample {
    * Hint:
    * Use GitClient.get(sha): Option[Commit]
    */
-  def author(id: Option[SHA]): Option[Commit.Author] = ???
-  //print(author(Option(SHA("123"))))
+  def author(id: Option[SHA]): Option[Commit.Author] = for {
+    sha <- id
+    commit <- GitClient.get(sha)
+  } yield commit.author
+
+  print(author(Option(SHA("123"))))
 
   /**
    * T2.1
@@ -32,9 +36,12 @@ object OptionExample {
    *
    * GitClient.get(sha): Option[Commit]
    */
-  def gitLog10PrettyOneLine(last10Commits: List[SHA]): List[String] = ???
-  //  val last10Commts = List.fill(10)(SHA(GitData.randSHA))
-  //  gitLog10PrettyOneLine(last10Commts).foreach(println)
+  def gitLog10PrettyOneLine(last10Commits: List[SHA]): List[String] = {
+
+  }
+
+  val last10Commts = List.fill(10)(SHA(GitData.randSHA))
+  gitLog10PrettyOneLine(last10Commts).foreach(println)
 
   /**
    * T2.2

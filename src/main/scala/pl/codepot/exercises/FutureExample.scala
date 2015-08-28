@@ -41,13 +41,17 @@ object FutureExample extends App {
   def makeItFaster(amount: Double): Future[Unit] = {
     val usd = Currency("USD")
     val eur = Currency("EUR")
+
+    val f1 = CurrencyService.convertPlnTo(amount, usd)
+    val f2 = CurrencyService.convertPlnTo(amount, eur)
+
     for {
-      inUSD <- CurrencyService.convertPlnTo(amount, usd)
-      inEUR <- CurrencyService.convertPlnTo(amount, eur)
+      inUSD <- f1
+      inEUR <- f2
       _ = println(s"$amount PLN is $inUSD USD or $inEUR EUR")
     } yield ()
   }
-  //  makeItFaster(10.0)
+  makeItFaster(10.0).foreach(println)
 
   /**
    * T5.2
@@ -62,8 +66,10 @@ object FutureExample extends App {
       number <- Future.successful(1)
       if number < 1
     } yield number
-    //print(Await.result(result, 5.seconds))
+    print(Await.result(result.recover{ case _: NoSuchElementException => 0}, 5.seconds))
   }
+
+  futureGuardProblem
 
   /**
    * T5.3
@@ -77,13 +83,17 @@ object FutureExample extends App {
     }
     val result = for {
       a <- sleepAndGet(1, "a")
-      //if a.startsWith("prefix")
+      if a.startsWith("prefix")
       b <- sleepAndGet(5, "b")
       c <- sleepAndGet(10, "c")
     } yield a + b + c
     Await.ready(result, 30.seconds)
   }
-  //  breakChain
+
+  val t0 = System.currentTimeMillis()
+  breakChain
+  val t1 = System.currentTimeMillis()
+  println(s"breakChain took ${t1 - t0} ms")
 
   /**
    * T5.4
@@ -96,10 +106,15 @@ object FutureExample extends App {
    */
   def futureOption(): Future[List[String]] = {
     val sha = SHA("1213123213123")
-    def projects(author: Commit.Author) = Future.successful(List("scala/scala", "akka/akka", "EnterpriseQualityCoding/FizzBuzzEnterpriseEdition"))
+    def projects(author: Commit.Author) =
+      Future.successful(List("scala/scala", "akka/akka", "EnterpriseQualityCoding/FizzBuzzEnterpriseEdition"))
 
-    ???
+    for {
+      Some(commit) <- RemoteGitClient.get(sha)
+      projectz <- projects(commit.author)
+    } yield projectz
   }
+
 
   /**
    * T5.5
@@ -116,7 +131,10 @@ object FutureExample extends App {
     import scalaz.OptionT._
     val shaF = Future.successful(Option(SHA("1213123213123")))
 
-    ???
+    (for {
+      sha <- optionT(shaF)
+      commit <- optionT(RemoteGitClient.get(sha))
+    } yield commit).run
   }
 
   /**
@@ -140,7 +158,12 @@ object FutureExample extends App {
       }
     }))
 
-    ???
+
+    for {
+      isBeautiful <- ask(omniscient, "Is the world beautiful place?").mapTo[Boolean]
+      if isBeautiful
+      money <- ask(boss, "Money!").mapTo[String]
+    } println(money)
 
     ///
     system.shutdown()

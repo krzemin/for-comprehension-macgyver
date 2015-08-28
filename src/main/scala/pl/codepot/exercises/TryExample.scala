@@ -1,9 +1,9 @@
 package pl.codepot.exercises
 
 import scala.io.Source
-import scala.util.{ Try, Failure }
+import scala.util.{Success, Try, Failure}
 
-object TryExample {
+object TryExample extends App {
 
   /**
    * T4.0
@@ -18,6 +18,8 @@ object TryExample {
     if b != 0
   } yield a / b
 
+  println(division("5", "0"))
+
   /**
    * T4.1
    * What to do with exception in Try?
@@ -26,7 +28,22 @@ object TryExample {
    *  pattern matching
    *  recover
    */
-  //division("0","0")
+
+  def division2(dividend: String, divisor: String): Try[Int] =  {
+    Try(dividend.toInt) match {
+      case Success(a) =>
+        Try(divisor.toInt) match {
+          case Success(b) => b match {
+            case 0 => Failure(new NoSuchElementException("Predicate does not hold for 0"))
+            case _ => Success(a / b)
+          }
+          case f => f
+        }
+      case f => f
+    }
+  }
+
+  println(division2("0","0"))
 
   /**
    * T4.2
@@ -36,10 +53,10 @@ object TryExample {
    */
   def chain = for {
     v1 <- Try(throw new RuntimeException("It was my fault"))
-    //v2 <- Try {}
+    v2 <- Try {println("Hello!")}
+  } yield v2
 
-  } yield v1 //} yield v2
-
+  println(chain)
   /**
    * T4.3
    * Enable options to work with Try.
@@ -48,9 +65,10 @@ object TryExample {
    */
   def tryWithOption: Option[Int] = for {
     i <- Some(1)
-    //    j <- Try(1)
-  } yield i //+ j
+    j <- Try(1).toOption
+  } yield i + j
 
+  println(tryWithOption)
 }
 
 object TryAnswers {

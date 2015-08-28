@@ -4,7 +4,7 @@ import pl.codepot.common.{ Espresso, Currency }
 
 import reflect.runtime.universe.{ reify => desugar }
 
-object IntroductionExample {
+object IntroductionExample extends App {
 
   type ExchangeRate = Double
   val euro = Currency("EUR")
@@ -21,6 +21,14 @@ object IntroductionExample {
     val eurDollarRate: Option[ExchangeRate] = euroExchangeRates.flatMap(_.get(dollar))
     eurDollarRate.map(_ * amount).foreach(inDollars => print(s"$amount EUR is $inDollars USD"))
   }
+
+  def convertEuroToUsd2(amount: Double): Unit = for {
+    euroExchangeRates <- rates.get(euro)
+    eurDollarRate <- euroExchangeRates.get(dollar)
+    inDollars = eurDollarRate * amount
+  } yield print(s"$amount EUR is $inDollars USD")
+
+  convertEuroToUsd2(30.0)
 
   /**
    * T3.1

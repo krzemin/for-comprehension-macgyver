@@ -8,7 +8,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{ Await, Future }
 
-object FutureExample {
+object FutureExample extends App {
 
   /**
    * T5.0
@@ -21,8 +21,15 @@ object FutureExample {
    *     TransactionService.get
    *     CurrencyService.convertToEUR
    */
-  def convertToEur(id: TransactionId): Future[Transaction] = ???
-  //print(Await.result(convertToEur(TransactionId("123")), 5.seconds))
+  def convertToEur(id: TransactionId): Future[Transaction] = for {
+    transaction <- TransactionService.get(id)
+    amountInEUR <- CurrencyService.convertToEUR(transaction.amount, transaction.currency)
+  } yield transaction.copy(
+      amount = amountInEUR,
+      currency = Currency("EUR")
+    )
+
+  print(Await.result(convertToEur(TransactionId("123")), 5.seconds))
 
   /**
    * T5.1

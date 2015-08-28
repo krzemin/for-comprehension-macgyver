@@ -36,9 +36,10 @@ object OptionExample extends App {
    *
    * GitClient.get(sha): Option[Commit]
    */
-  def gitLog10PrettyOneLine(last10Commits: List[SHA]): List[String] = {
-
-  }
+  def gitLog10PrettyOneLine(last10Commits: List[SHA]): List[String] = for {
+    sha <- last10Commts
+    commit <- GitClient.get(sha)
+  } yield s"${sha.value} ${commit.msg}"
 
   val last10Commts = List.fill(10)(SHA(GitData.randSHA))
   gitLog10PrettyOneLine(last10Commts).foreach(println)

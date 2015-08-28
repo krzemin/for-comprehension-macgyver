@@ -13,10 +13,10 @@ object Syntax {
    * Not specific to for-comprehensions but could save you few minutes once
    */
   def notCompiling = {
-    //    for (
-    //      i <- List(1, 2, 3)
-    //      j <- List(1, 2, 3)
-    //    ) yield i + j
+        for {
+          i <- List(1, 2, 3)
+          j <- List(1, 2, 3)
+        } yield i + j
   }
 
   /**

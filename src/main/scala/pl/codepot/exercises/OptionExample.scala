@@ -48,10 +48,10 @@ object OptionExample extends App {
    * T2.2
    * Explain why this won't compile unlike the previous example
    */
-  //  def whyThisWontWork = for {
-  //    j <- Some(2)
-  //    i <- List(1, 2, 3)
-  //  } yield i * j
+//    def whyThisWontWork = for {
+//      j <- Some(2)
+//      i <- List(1, 2, 3)
+//    } yield i * j
 
   /**
    * T2.3
@@ -62,8 +62,12 @@ object OptionExample extends App {
    * > List((1,1),(1,3),(1,5),(2,1),(2,3),(2,5))
    * @return
    */
-  def dealWithListOfOptions(a: List[Option[Int]], b: List[Int]): List[(Int, Int)] = ???
-  //dealWithListOfOptions(List(Some(1),None, Some(2)),List(1,3,5))
+  def dealWithListOfOptions(a: List[Option[Int]], b: List[Int]): List[(Int, Int)] = for {
+    x <- a.flatten
+    y <- b
+  } yield (x, y)
+
+  dealWithListOfOptions(List(Some(1),None, Some(2)),List(1,3,5)).foreach(println)
 }
 
 object OptionAnswers {

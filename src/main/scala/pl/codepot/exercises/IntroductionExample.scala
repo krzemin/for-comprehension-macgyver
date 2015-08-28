@@ -78,6 +78,18 @@ object IntroductionExample extends App {
     }
   }
 
+  printExchangeRates()
+
+  def printExchangeRates2() = for {
+    (from, toRates) <- rates
+    (to, rate) <- toRates
+  } {
+    println(s"$from")
+    println(s"   $to -> $rate")
+  }
+
+  printExchangeRates2()
+
   /**
    * T3.3
    * Play with desugaring to see what are really following code blocks

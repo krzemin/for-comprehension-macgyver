@@ -4,7 +4,7 @@ scalaVersion := "2.11.7"
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-feature", "-encoding", "utf8")
 
-scalariformSettings
+//scalariformSettings
 
 libraryDependencies ++=Seq(
   "org.scala-lang" % "scala-reflect" % "2.11.7",

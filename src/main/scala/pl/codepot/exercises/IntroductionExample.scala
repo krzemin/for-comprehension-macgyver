@@ -99,35 +99,46 @@ object IntroductionExample extends App {
     val odd = List(1, 3, 5, 7)
     val neightbours = (i: Int) => List(i - 1, i, i + 1)
 
-    //println(desugar {
+    println(desugar {
     for {
       i <- odd
     } yield i * 2
-    //  }.tree)
+      }.tree)
 
-    //    println(desugar {
-    //      for {
-    //        i <- odd
-    //        j <- neightbours(i)
-    //      } print(j)
-    //    }.tree)
+        println(desugar {
+          for {
+            i <- odd
+            j <- neightbours(i)
+          } print(j)
+        }.tree)
 
-    //    println(desugar {
-    //      for {
-    //        i <- odd
-    //        j <- neightbours(i)
-    //        if j % 2 == 0
-    //      } print(j)
-    //    }.tree)
+        println(desugar {
+          for {
+            i <- odd
+            j <- neightbours(i)
+            if j % 2 == 0
+          } print(j)
+        }.tree)
 
     /**this code after desugaring is not much readable. Could you sketch it in clearer form?**/
-    //    for {
-    //      i <- Some(1)
-    //      j = i + 1
-    //    } yield j
+
+    println(desugar {
+      for {
+        i <- Some(1)
+        j = i + 1
+      } yield j
+    }.tree)
+
+
+    println(desugar {
+      for {
+        i <- Some(1)
+      } yield i + 1
+    }.tree)
 
   }
-  //  desugaringFun
+
+  desugaringFun
 }
 
 object IntroductionAnswers {
